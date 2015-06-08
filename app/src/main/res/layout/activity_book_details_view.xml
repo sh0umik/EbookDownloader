@@ -34,7 +34,7 @@
                 />
 
             <TextView
-                android:id="@+id/dialogBookTitle"
+                android:id="@+id/bookTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
@@ -52,6 +52,7 @@
             android:layout_marginTop="10dp"
             android:layout_below="@+id/lvBookNameContainer"
             android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/dialogBookAuthorLebel"
                 android:layout_width="wrap_content"
@@ -63,7 +64,7 @@
                 />
 
             <TextView
-                android:id="@+id/dialogBookAuthorTitle"
+                android:id="@+id/bookAuthor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
@@ -91,7 +92,7 @@
                 />
 
             <TextView
-                android:id="@+id/dialogBookYear"
+                android:id="@+id/BookYear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
@@ -120,7 +121,7 @@
                 />
 
             <TextView
-                android:id="@+id/dialogBookPublishar"
+                android:id="@+id/BookPublishar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
@@ -148,7 +149,7 @@
                 />
 
             <TextView
-                android:id="@+id/dialogBookDisription"
+                android:id="@+id/BookDisription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"

@@ -5,10 +5,10 @@ import android.app.ProgressDialog;
 import android.net.ParseException;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -25,25 +25,34 @@ import java.io.IOException;
 public class BookDetailsView extends Activity {
 
     String bookID;
-    String bookTitle; 	// title of the book
-    String subTitle; 	// sub title of the book
-    String description; // discription of the book
-    String author; 		// author of the book
-    String ISBN; 		// isbn number of the book
-    String pageNum; 		// page number of the book
-    String year; 			// publishing year of the book
-    String Publisher; 	// publisher of the book
-    String image; 		// image url of the book image
-    BookAdapter bookAdapterDetails;
+
+    ImageView  bookImg;
+    TextView booktitle;
+    TextView bookauthor;
+    TextView bookYear;
+    TextView bookPub;
+    TextView bookDes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_details_view);
+
+        // init
+
+        bookImg = (ImageView) findViewById(R.id.bookImage);
+        booktitle = (TextView) findViewById(R.id.bookTitle);
+        bookauthor = (TextView) findViewById(R.id.bookAuthor);
+        bookYear = (TextView) findViewById(R.id.BookYear);
+        bookPub = (TextView) findViewById(R.id.BookPublishar);
+        bookDes = (TextView) findViewById(R.id.BookDisription);
+
+
         //Get the bundle
+
         Bundle bundle = getIntent().getExtras();
         this.bookID = bundle.getString("ID");
-        Log.d("bug", bookID);
+
 
         new JSONAsyncTask().execute("http://it-ebooks-api.info/v1/book/" + this.bookID);
     }
@@ -70,7 +79,7 @@ public class BookDetailsView extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    class JSONAsyncTask extends AsyncTask<String, Void, Boolean> {
+    class JSONAsyncTask extends AsyncTask<String, Void, JSONObject> {
 
         ProgressDialog dialog;
 
@@ -84,7 +93,7 @@ public class BookDetailsView extends Activity {
         }
 
         @Override
-        protected Boolean doInBackground(String... urls) {
+        protected JSONObject doInBackground(String... urls) {
             try {
 
                 //------------------>>
@@ -102,12 +111,8 @@ public class BookDetailsView extends Activity {
 
                     JSONObject jsono = new JSONObject(data);
 
-                    bookTitle = jsono.getString("Title");
-                    description = jsono.getString("Description");
 
-                    Log.d("bug", bookTitle + " " + description);
-
-                    return true;
+                    return jsono;
                 }
 
                 //------------------>>
@@ -119,13 +124,22 @@ public class BookDetailsView extends Activity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return false;
+            return null;
         }
 
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(JSONObject result) {
             dialog.cancel();
-            if(result == false)
-                Toast.makeText(getApplicationContext(), "Unable to fetch data from server", Toast.LENGTH_LONG).show();
+            try {
+
+                booktitle.setText(result.getString("Title"));
+                bookDes.setText(result.getString("Description"));
+                bookauthor.setText(result.getString("Author"));
+                bookYear.setText(result.getString("Year"));
+                bookPub.setText(result.getString("Publisher"));
+
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
 
         }
     }
