@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialogcrollView"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="300dp"
+        android:layout_margin="10dp">
+        <ImageView
+            android:id="@+id/bookImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/index"
+            />
+        <LinearLayout
+            android:id="@+id/lvBookNameContainer"
+            android:layout_width="fill_parent"
+            android:gravity="left"
+            android:layout_below="@+id/bookImage"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/dialogBookTitleLebel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_marginRight="10dp"
+                android:text="Title:"
+                android:textSize="20dp"
+                />
+
+            <TextView
+                android:id="@+id/dialogBookTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:text="Let Us C"
+                android:textSize="20dp"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lvBookAuthorContainer"
+            android:layout_width="fill_parent"
+            android:gravity="left"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/lvBookNameContainer"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/dialogBookAuthorLebel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_marginRight="10dp"
+                android:text="Author:"
+                android:textSize="20dp"
+                />
+
+            <TextView
+                android:id="@+id/dialogBookAuthorTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:text="Harbert Shilt"
+                android:textSize="20dp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/lvBookYearContainer"
+            android:layout_width="fill_parent"
+            android:gravity="left"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/lvBookAuthorContainer"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/dialogBookYearLebel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_marginRight="10dp"
+                android:text="Year:"
+                android:textSize="20dp"
+                />
+
+            <TextView
+                android:id="@+id/dialogBookYear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:text="2015"
+                android:textSize="20dp"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lvBookPublisharContainer"
+            android:layout_width="fill_parent"
+            android:gravity="left"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/lvBookYearContainer"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/dialogBookPublisharLebel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_marginRight="10dp"
+                android:text="Publishar:"
+                android:textSize="20dp"
+                />
+
+            <TextView
+                android:id="@+id/dialogBookPublishar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:text="McGRAW- Hill"
+                android:textSize="20dp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/lvBookDisriptionContainer"
+            android:layout_width="fill_parent"
+            android:gravity="left"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/lvBookPublisharContainer"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/dialogBookDisriptionLebel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_marginRight="10dp"
+                android:text="Discription:"
+                android:textSize="15dp"
+                />
+
+            <TextView
+                android:id="@+id/dialogBookDisription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:text="Programming book"
+                android:textSize="15dp"
+                />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</ScrollView>
