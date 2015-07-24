@@ -2,9 +2,12 @@ package com.example.fahim.ebookdl;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ParseException;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -20,11 +23,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 
 public class BookDetailsView extends Activity {
 
     String bookID;
+    String bookImgUrl;
 
     ImageView  bookImg;
     TextView booktitle;
@@ -52,9 +57,13 @@ public class BookDetailsView extends Activity {
 
         Bundle bundle = getIntent().getExtras();
         this.bookID = bundle.getString("ID");
+        this.bookImgUrl = bundle.getString("ImageURL");
+
 
 
         new JSONAsyncTask().execute("http://it-ebooks-api.info/v1/book/" + this.bookID);
+        new DownloadImageTask((ImageView) findViewById(R.id.bookImage))
+                .execute(bookImgUrl);
     }
 
     @Override
@@ -130,7 +139,6 @@ public class BookDetailsView extends Activity {
         protected void onPostExecute(JSONObject result) {
             dialog.cancel();
             try {
-
                 booktitle.setText(result.getString("Title"));
                 bookDes.setText(result.getString("Description"));
                 bookauthor.setText(result.getString("Author"));
@@ -143,4 +151,36 @@ public class BookDetailsView extends Activity {
 
         }
     }
+
+    private class DownloadImageTask extends AsyncTask<String , Void , Bitmap>{
+
+        ImageView bookImgView;
+
+        public DownloadImageTask(ImageView bookImgView){
+            this.bookImgView = bookImgView;
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap bookImg = null;
+
+            try{
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                bookImg = BitmapFactory.decodeStream(in);
+
+            }catch (Exception e){
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+
+            return bookImg;
+        }
+
+        protected void onPostExecute(Bitmap result){
+            bookImgView.setImageBitmap(result);
+        }
+    }
+
+
 }

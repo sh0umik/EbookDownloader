@@ -18,9 +18,9 @@ import java.util.ArrayList;
 /**
  * Created by fahim on 6/8/15.
  */
-public class BookAdapter extends ArrayAdapter<BookData> {
+public class BookAdapter extends ArrayAdapter<BookDataModel> {
 
-    ArrayList<BookData> booklist;
+    ArrayList<BookDataModel> booklist;
     LayoutInflater vi;
     int Resource;
     public ViewHolder holder;
@@ -30,7 +30,7 @@ public class BookAdapter extends ArrayAdapter<BookData> {
         public TextView textView;
     }
 
-    public BookAdapter(Context context, int resource, ArrayList<BookData> booklist) {
+    public BookAdapter(Context context, int resource, ArrayList<BookDataModel> booklist) {
         super(context, resource, booklist);
 
         vi = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

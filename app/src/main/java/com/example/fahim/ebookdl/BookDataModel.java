@@ -3,7 +3,7 @@ package com.example.fahim.ebookdl;
 /**
  * Created by fahim on 6/8/15.
  */
-public class BookData {
+public class BookDataModel {
 
         String bookID; 		// Id of the book
         String bookTitle; 	// title of the book
@@ -18,15 +18,15 @@ public class BookData {
 
 
         // constractor of bookData class
-        public BookData() {
+        public BookDataModel() {
             // if you need anything fill the method
         }
 
         // constructor of the book to store the information;
 
-        public BookData(String bookID, String bookTitle, String subTitle,
-                        String description, String author, String ISBN, String pageNum,
-                        String year, String publisher, String image) {
+        public BookDataModel(String bookID, String bookTitle, String subTitle,
+                             String description, String author, String ISBN, String pageNum,
+                             String year, String publisher, String image) {
             super();
             this.bookID = bookID;
             this.bookTitle = bookTitle;
