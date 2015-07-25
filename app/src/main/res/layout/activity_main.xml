@@ -30,17 +30,37 @@
 
         </GridView>
 
-        <Button
-            android:id="@+id/nextPage"
-            android:width="170dp"
+        <TextView
+            android:id="@+id/total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"
-            android:text="Next Page"
-
+            android:layout_centerHorizontal="true"
+            android:textSize="20sp"
             />
+
+        <Button
+            android:id="@+id/previous"
+            android:text="Previous"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:textSize="10sp"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/next"
+            android:text="Next"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:textSize="10sp"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content" />
+
+
+
 
     </RelativeLayout>
 
@@ -49,7 +69,7 @@
         android:layout_width="200dp"
         android:layout_height="match_parent"
         android:layout_gravity="left|start"
-        android:background="#ffeeeeee"/>
+        android:background="#ffeeeeee" />
 
 
     </android.support.v4.widget.DrawerLayout>
