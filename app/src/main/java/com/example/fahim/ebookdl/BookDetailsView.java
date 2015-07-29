@@ -1,15 +1,15 @@
 package com.example.fahim.ebookdl;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.ParseException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,7 +28,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 
-public class BookDetailsView extends Activity {
+public class BookDetailsView extends AppCompatActivity {
 
     String bookID;
     String bookImgUrl;
@@ -37,8 +37,10 @@ public class BookDetailsView extends Activity {
     TextView booktitle;
     TextView bookauthor;
     TextView bookYear;
-    TextView bookPub;
+    TextView bookISBN;
     TextView bookDes;
+
+    String navBookTitle;
 
     String downloadLink;
 
@@ -47,16 +49,17 @@ public class BookDetailsView extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_book_details_view);
+        setContentView(R.layout.details_view);
+        setTitle("Book Details");
 
         // init
 
         bookImg = (ImageView) findViewById(R.id.bookImage);
         booktitle = (TextView) findViewById(R.id.bookTitle);
         bookauthor = (TextView) findViewById(R.id.bookAuthor);
-        bookYear = (TextView) findViewById(R.id.BookYear);
-        bookPub = (TextView) findViewById(R.id.BookPublishar);
-        bookDes = (TextView) findViewById(R.id.BookDisription);
+        bookYear = (TextView) findViewById(R.id.bookYear);
+        bookISBN = (TextView) findViewById(R.id.bookISBN);
+        bookDes = (TextView) findViewById(R.id.bookDes);
 
 
         //Get the bundle
@@ -75,14 +78,14 @@ public class BookDetailsView extends Activity {
         //new DownloadImageTask((ImageView) findViewById(R.id.bookImage))
         //        .execute(bookImgUrl);
 
-        downloadBtn = (Button) findViewById(R.id.download);
+//        downloadBtn = (Button) findViewById(R.id.download);
 
-        downloadBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToUrl(downloadLink);
-            }
-        });
+//        downloadBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                goToUrl(downloadLink);
+//            }
+//        });
 
     }
 
@@ -96,6 +99,7 @@ public class BookDetailsView extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_book_details_view, menu);
+        //MenuItem download = menu.findItem(R.id.buttonPanel);
         return true;
     }
 
@@ -112,6 +116,15 @@ public class BookDetailsView extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        overridePendingTransition(R.anim.right_out, R.anim.left_in);
+        Log.i("some ", "back pressed");
     }
 
     class JSONAsyncTask extends AsyncTask<String, Void, JSONObject> {
@@ -169,8 +182,10 @@ public class BookDetailsView extends Activity {
                 bookDes.setText(result.getString("Description"));
                 bookauthor.setText(result.getString("Author"));
                 bookYear.setText(result.getString("Year"));
-                bookPub.setText(result.getString("Publisher"));
+                bookISBN.setText(result.getString("ISBN"));
                 downloadLink = result.getString("Download");
+
+                setTitle(result.getString("Title"));
 
             }catch (JSONException e){
                 e.printStackTrace();

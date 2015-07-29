@@ -68,11 +68,11 @@ public class MainActivity extends AppCompatActivity {
 
     TextView total;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+        setContentView(R.layout.books_grid);
 
         mDrawerList = (ListView)findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
@@ -90,29 +90,32 @@ public class MainActivity extends AppCompatActivity {
             searchStr = "2014";
             getResutlFromServer(searchStr, null);
 
-            nextButton = (Button) findViewById(R.id.next);
-            nextButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    getResutlFromServer(searchStr, "next");
-
-                }
-            });
-
-            previousButton = (Button) findViewById(R.id.previous);
-            previousButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    getResutlFromServer(searchStr, "back");
-                }
-            });
+//            nextButton = (Button) findViewById(R.id.next);
+//            nextButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//
+//                    getResutlFromServer(searchStr, "next");
+//
+//                }
+//            });
+//
+//            previousButton = (Button) findViewById(R.id.previous);
+//            previousButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//
+//                    getResutlFromServer(searchStr, "back");
+//                }
+//            });
         }
 
     }
 
+    // Serch for Books form the server
     public void getResutlFromServer(String string, String status){
+
+        setTitle(searchStr+" books");
 
         Log.i("MyActivity", " limit is : " + limit);
 
@@ -138,23 +141,24 @@ public class MainActivity extends AppCompatActivity {
         booklist = new ArrayList<BookDataModel>();
         bookGridView = (GridView) findViewById(R.id.gridView);
 
+        // Click event for each grid view content
         bookGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
                 Intent obj = new Intent(getApplicationContext(), BookDetailsView.class);
                 obj.putExtra("ID", booklist.get(i).getBookID());
                 obj.putExtra("ImageURL", booklist.get(i).getImage());
                 startActivity(obj);
+                overridePendingTransition(R.anim.right_in, R.anim.left_out);
             }
         });
 
         bookAdapter = new BookAdapter(getApplicationContext(), R.layout.grid_view_content, booklist);
         bookGridView.setAdapter(bookAdapter);
-        Log.i("MyActivity", "Page Number is  " + pageNumber+ " searcchin for : " + searchStr);
+        Log.i("MyActivity", "Page Number is  " + pageNumber + " searcchin for : " + searchStr);
         new JSONAsyncTask().execute("http://it-ebooks-api.info/v1/search/" + string + "/page/" + pageNumber);
 
-        total = (TextView) findViewById(R.id.total);
-        total.setText(String.valueOf(totalFound+" books found"));
     }
 
     // Funciton to check if we are connected to online or not
@@ -170,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Navigation Drawer Functions
     private void addDrawerItems() {
-        String[] osArray = { "Latest", "Android", "iOS", "Windows", "OS X", "Linux" };
+        String[] osArray = { "Latest", "Android", "iOS", "Windows", "OS X", "Linux", "PHP", "MySql", "Java", "MongoDb" };
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
         mDrawerList.setAdapter(mAdapter);
 
@@ -192,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle("Navigation!");
+                getSupportActionBar().setTitle("Categories");
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
@@ -236,8 +240,8 @@ public class MainActivity extends AppCompatActivity {
                 searchStr = query;
 
                 pageNumber = 1; // Set page number to 1 for new search
-                nextButton.setEnabled(true);
-                previousButton.setEnabled(false);
+                //nextButton.setEnabled(true);
+                //previousButton.setEnabled(false);
 
                 getResutlFromServer(searchStr, null);
                 Log.i("MyActivity", "searching for : " + query);
@@ -274,6 +278,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     // AsyncTask Class for JSON handeling
 
     class JSONAsyncTask extends AsyncTask<String, Void, Boolean> {
@@ -305,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
                     HttpEntity entity = response.getEntity();
                     String data = EntityUtils.toString(entity);
 
-
+                    // Make a new JSON object with the response data
                     JSONObject jsono = new JSONObject(data);
 
                     totalFound = Integer.parseInt(jsono.getString("Total"));  // Get total result
@@ -344,6 +349,9 @@ public class MainActivity extends AppCompatActivity {
             bookAdapter.notifyDataSetChanged();
             if(result == false)
                 Toast.makeText(getApplicationContext(), "Unable to fetch data from server", Toast.LENGTH_LONG).show();
+
+            //total = (TextView) findViewById(R.id.total);
+            //total.setText(String.valueOf(totalFound + " books found"));
 
         }
     }

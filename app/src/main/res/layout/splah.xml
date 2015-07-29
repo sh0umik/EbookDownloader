@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/radialback"
+    android:layout_gravity="center"
+    android:id="@+id/lin_lay"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <ImageView
+        android:layout_width="155dp"
+        android:layout_height="202dp"
+        android:id="@+id/logo"
+        android:background="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/logoTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:text="IT-EBOOKS Books Downloader"
+        android:textSize="25sp"
+        android:layout_weight="0.09" />
+
+</LinearLayout>

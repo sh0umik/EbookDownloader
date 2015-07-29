@@ -83,7 +83,7 @@ public class BookAdapter extends ArrayAdapter<BookDataModel> {
             holder = (ViewHolder) v.getTag();
         }
 
-        Picasso.with(context).load(booklist.get(position).getImage()).resize(150, 220).into(holder.imageView);
+        Picasso.with(context).load(booklist.get(position).getImage()).placeholder(R.drawable.loading).resize(150, 220).into(holder.imageView);
 
         holder.textView.setText(booklist.get(position).getBookTitle());
 

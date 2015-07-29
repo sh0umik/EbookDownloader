@@ -3,6 +3,7 @@ package com.example.fahim.ebookdl;
 /**
  * Created by fahim on 6/8/15.
  */
+
 public class BookDataModel {
 
         String bookID; 		// Id of the book
