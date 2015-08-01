@@ -21,12 +21,15 @@
         </activity>
         <activity
             android:name=".BookDetailsView"
-            android:label="@string/title_activity_book_details_view" >
+            android:label="@string/title_activity_book_details_view"
+            android:configChanges="orientation|screenSize">
         </activity>
 
         <activity
             android:name=".MainActivity"
-            android:label="MainActivity" >
+            android:label="MainActivity"
+            android:configChanges="orientation|screenSize"
+            >
         </activity>
 
     </application>

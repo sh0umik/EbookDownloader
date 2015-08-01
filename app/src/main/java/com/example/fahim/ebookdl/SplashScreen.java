@@ -34,6 +34,7 @@ public class SplashScreen extends Activity {
             }
         }, 5* 1000);
     }
+
     private void StartAnimations() {
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.alpha);
         anim.reset();

@@ -10,6 +10,7 @@
     android:weightSum="1">
 
     <ImageView
+        android:layout_marginTop="55dp"
         android:layout_width="155dp"
         android:layout_height="202dp"
         android:id="@+id/logo"
@@ -21,6 +22,7 @@
         android:layout_height="25dp"
         android:text="IT-EBOOKS Books Downloader"
         android:textSize="25sp"
-        android:layout_weight="0.09" />
+        android:layout_weight="0.09"
+        android:textColor="#fcfbfbff" />
 
 </LinearLayout>

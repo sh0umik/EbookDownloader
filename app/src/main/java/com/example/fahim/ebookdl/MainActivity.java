@@ -1,7 +1,9 @@
 package com.example.fahim.ebookdl;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
@@ -20,8 +22,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Pagination Buttons
 
-    Button nextButton;
-    Button previousButton;
+    ImageButton nextButton;
+    ImageButton previousButton;
 
     TextView total;
 
@@ -90,24 +92,24 @@ public class MainActivity extends AppCompatActivity {
             searchStr = "2014";
             getResutlFromServer(searchStr, null);
 
-//            nextButton = (Button) findViewById(R.id.next);
-//            nextButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//
-//                    getResutlFromServer(searchStr, "next");
-//
-//                }
-//            });
-//
-//            previousButton = (Button) findViewById(R.id.previous);
-//            previousButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//
-//                    getResutlFromServer(searchStr, "back");
-//                }
-//            });
+            nextButton = (ImageButton) findViewById(R.id.next);
+            nextButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    getResutlFromServer(searchStr, "next");
+
+                }
+            });
+
+            previousButton = (ImageButton) findViewById(R.id.pre);
+            previousButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    getResutlFromServer(searchStr, "back");
+                }
+            });
         }
 
     }
@@ -115,16 +117,18 @@ public class MainActivity extends AppCompatActivity {
     // Serch for Books form the server
     public void getResutlFromServer(String string, String status){
 
-        setTitle(searchStr+" books");
-
-        Log.i("MyActivity", " limit is : " + limit);
+        Log.i("MyActivity", " limit is : " + limit + "page : "+pageNumber);
 
         if(status == "next"){
 
             if(pageNumber < limit){
                 pageNumber++;
+                previousButton.setImageResource(R.drawable.pre);
                 previousButton.setEnabled(true);
             }else{
+                nextButton.setImageResource(R.drawable.next_d);
+                nextButton.setEnabled(false);
+                previousButton.setImageResource(R.drawable.pre);
                 previousButton.setEnabled(true);
             }
         }
@@ -132,11 +136,18 @@ public class MainActivity extends AppCompatActivity {
 
             if(pageNumber > 1){
                 pageNumber--;
+                previousButton.setImageResource(R.drawable.pre);
+                previousButton.setEnabled(true);
+                nextButton.setImageResource(R.drawable.next);
                 nextButton.setEnabled(true);
             }else{
+                previousButton.setImageResource(R.drawable.pre_d);
                 previousButton.setEnabled(false);
             }
         }
+
+        setTitle("\"" + searchStr + "\" books | Page : " + pageNumber);
+        getSupportActionBar().setTitle("\"" + searchStr + "\" books | Page : " + pageNumber);
 
         booklist = new ArrayList<BookDataModel>();
         bookGridView = (GridView) findViewById(R.id.gridView);
@@ -158,6 +169,30 @@ public class MainActivity extends AppCompatActivity {
         bookGridView.setAdapter(bookAdapter);
         Log.i("MyActivity", "Page Number is  " + pageNumber + " searcchin for : " + searchStr);
         new JSONAsyncTask().execute("http://it-ebooks-api.info/v1/search/" + string + "/page/" + pageNumber);
+
+    }
+
+    private void setButton(Boolean regular, Boolean init, Boolean last)
+    {
+        if(init){
+            Log.i("Button", "Init the button");
+            nextButton.setImageResource(R.drawable.next);
+            nextButton.setEnabled(true);
+            previousButton.setImageResource(R.drawable.pre_d);
+            previousButton.setEnabled(false);
+        }else if(last){
+            Log.i("Button", "Last Page Button");
+            nextButton.setImageResource(R.drawable.next_d);
+            nextButton.setEnabled(false);
+            previousButton.setImageResource(R.drawable.pre);
+            previousButton.setEnabled(true);
+        }else if(regular){
+            Log.i("Button", "Regular Button");
+            nextButton.setImageResource(R.drawable.next);
+            nextButton.setEnabled(true);
+            previousButton.setImageResource(R.drawable.pre);
+            previousButton.setEnabled(true);
+        }
 
     }
 
@@ -190,6 +225,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void setButton(Boolean next, Boolean previous)
+    {
+        if(next){
+            nextButton.setImageResource(R.drawable.next_d);
+            nextButton.setEnabled(false);
+        }
+
+    }
+
     private void setupDrawer() {
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
 
@@ -203,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getSupportActionBar().setTitle(mActivityTitle);
+                getSupportActionBar().setTitle(searchStr+" books");
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
@@ -240,8 +284,10 @@ public class MainActivity extends AppCompatActivity {
                 searchStr = query;
 
                 pageNumber = 1; // Set page number to 1 for new search
-                //nextButton.setEnabled(true);
-                //previousButton.setEnabled(false);
+                previousButton.setImageResource(R.drawable.next);
+                nextButton.setEnabled(true);
+                previousButton.setImageResource(R.drawable.pre_d);
+                previousButton.setEnabled(false);
 
                 getResutlFromServer(searchStr, null);
                 Log.i("MyActivity", "searching for : " + query);
@@ -266,9 +312,9 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         // Activate the navigation drawer toggle
         if (mDrawerToggle.onOptionsItemSelected(item)) {
@@ -276,6 +322,26 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to exit?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        MainActivity.this.finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+
     }
 
 
@@ -315,6 +381,8 @@ public class MainActivity extends AppCompatActivity {
 
                     totalFound = Integer.parseInt(jsono.getString("Total"));  // Get total result
                     limit = totalFound / 10; // set the limit for pagination
+
+                    Log.i("MyActivity", " limit is : " + limit);
 
                     JSONArray jarray = jsono.getJSONArray("Books");
 
