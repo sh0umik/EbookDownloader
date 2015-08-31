@@ -43,6 +43,7 @@ public class BookDetailsView extends AppCompatActivity {
     String navBookTitle;
 
     String downloadLink;
+    String bookName;
 
     Button downloadBtn;
 
@@ -89,10 +90,15 @@ public class BookDetailsView extends AppCompatActivity {
 
     }
 
-    private void goToUrl (String url) {
-        Uri uriUrl = Uri.parse(url);
-        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
-        startActivity(launchBrowser);
+    private void goToUrl (String url, String name) {
+
+//        Uri uriUrl = Uri.parse(url);
+//        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+//        startActivity(launchBrowser);
+        Intent i = new Intent(getApplicationContext(), Browser.class);
+        i.putExtra("URL", url);
+        i.putExtra("NAME", name);
+        startActivity(i);
     }
 
     @Override
@@ -112,7 +118,7 @@ public class BookDetailsView extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_download) {
-            goToUrl(downloadLink);
+            goToUrl(downloadLink, bookName);
         }
 
         return super.onOptionsItemSelected(item);
@@ -183,7 +189,9 @@ public class BookDetailsView extends AppCompatActivity {
                 bookauthor.setText(result.getString("Author"));
                 bookYear.setText(result.getString("Year"));
                 bookISBN.setText(result.getString("ISBN"));
+
                 downloadLink = result.getString("Download");
+                bookName = result.getString("Title");
 
                 setTitle(result.getString("Title"));
 

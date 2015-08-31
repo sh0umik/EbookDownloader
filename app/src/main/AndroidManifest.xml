@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -21,17 +23,24 @@
         </activity>
         <activity
             android:name=".BookDetailsView"
-            android:label="@string/title_activity_book_details_view"
-            android:configChanges="orientation|screenSize">
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_book_details_view" >
         </activity>
-
         <activity
             android:name=".MainActivity"
-            android:label="MainActivity"
             android:configChanges="orientation|screenSize"
-            >
+            android:label="MainActivity" >
         </activity>
-
+        <activity
+            android:name=".Browser"
+            android:label="@string/title_activity_browser"
+            android:configChanges="orientation|screenSize">
+        </activity>
+        <activity
+            android:name=".ListPdf"
+            android:label="@string/title_activity_list_pdf"
+            android:configChanges="orientation|screenSize">
+        </activity>
     </application>
 
 </manifest>

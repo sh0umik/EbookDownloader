@@ -17,9 +17,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
@@ -48,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
 
     String searchStr;
 
+    String titleStr;
+
     Integer pageNumber = 1;
     Integer totalFound;
 
@@ -70,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
 
     TextView total;
 
+    int myLastVisiblePos;// global variable of activity
+
+    int scrollCount = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,13 +95,14 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-
         if(isOnline()){
 
-            searchStr = "2014";
+            searchStr = "latest";
             getResutlFromServer(searchStr, null);
 
             nextButton = (ImageButton) findViewById(R.id.next);
+            nextButton.setVisibility(View.INVISIBLE);
+
             nextButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -103,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
             });
 
             previousButton = (ImageButton) findViewById(R.id.pre);
+            previousButton.setVisibility(View.INVISIBLE);
+
             previousButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -117,7 +129,11 @@ public class MainActivity extends AppCompatActivity {
     // Serch for Books form the server
     public void getResutlFromServer(String string, String status){
 
-        Log.i("MyActivity", " limit is : " + limit + "page : "+pageNumber);
+        titleStr = string;
+
+        searchStr = string.replaceAll(" ", "%20");
+
+        Log.i("MyActivity", " limit is : " + limit + "page : " + pageNumber);
 
         if(status == "next"){
 
@@ -146,8 +162,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        setTitle("\"" + searchStr + "\" books | Page : " + pageNumber);
-        getSupportActionBar().setTitle("\"" + searchStr + "\" books | Page : " + pageNumber);
+        setTitle("\"" + titleStr + "\" books | Page : " + pageNumber);
+        getSupportActionBar().setTitle("\"" + titleStr + "\" books | Page : " + pageNumber);
 
         booklist = new ArrayList<BookDataModel>();
         bookGridView = (GridView) findViewById(R.id.gridView);
@@ -165,10 +181,68 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        myLastVisiblePos = bookGridView.getFirstVisiblePosition();
+
+        bookGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+                //Log.i("scroll", "scrolling");
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int currentFirstVisPos = view.getFirstVisiblePosition();
+                if (currentFirstVisPos > myLastVisiblePos) {
+                    //scroll down
+                    Animation down = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slidedown);
+                    down.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            nextButton.setVisibility(View.INVISIBLE);
+                            previousButton.setVisibility(View.INVISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
+                    if (scrollCount == 1) {
+                        nextButton.startAnimation(down);
+                        previousButton.startAnimation(down);
+                        nextButton.getAnimation().cancel();
+                        previousButton.getAnimation().cancel();
+                    }
+                    scrollCount++;
+
+                }
+                if (currentFirstVisPos < myLastVisiblePos || view.getLastVisiblePosition() == 9) {
+                    //scroll up
+                    nextButton.setVisibility(View.VISIBLE);
+                    previousButton.setVisibility(View.VISIBLE);
+                    Animation up = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slideup);
+                    nextButton.setAnimation(up);
+                    previousButton.setAnimation(up);
+                    scrollCount = 1;
+                }
+                myLastVisiblePos = currentFirstVisPos;
+
+                Log.i("scroll", String.valueOf(view.getLastVisiblePosition()) + " " + String.valueOf(totalItemCount));
+            }
+        });
+
         bookAdapter = new BookAdapter(getApplicationContext(), R.layout.grid_view_content, booklist);
         bookGridView.setAdapter(bookAdapter);
+
         Log.i("MyActivity", "Page Number is  " + pageNumber + " searcchin for : " + searchStr);
-        new JSONAsyncTask().execute("http://it-ebooks-api.info/v1/search/" + string + "/page/" + pageNumber);
+        new JSONAsyncTask().execute("http://it-ebooks-api.info/v1/search/" + searchStr + "/page/" + pageNumber);
 
     }
 
@@ -209,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Navigation Drawer Functions
     private void addDrawerItems() {
-        String[] osArray = { "Latest", "Android", "iOS", "Windows", "OS X", "Linux", "PHP", "MySql", "Java", "MongoDb" };
+        String[] osArray = { "Latest", "Android", "iOS", "Windows", "OS X", "Linux", "PHP", "MySql", "Java", "MongoDb", "Downloads" };
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
         mDrawerList.setAdapter(mAdapter);
 
@@ -218,9 +292,14 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 String value = parent.getItemAtPosition(position).toString();
-                Toast.makeText(MainActivity.this, "Searching for " + value + " books", Toast.LENGTH_SHORT).show();
-                searchStr = value.replaceAll(" ", "%20");
-                getResutlFromServer(searchStr, null);
+                if(value.equals("Downloads")){
+                    Intent i = new Intent(getApplicationContext(), ListPdf.class);
+                    startActivity(i);
+                }else {
+                    Toast.makeText(MainActivity.this, "Searching for " + value + " books", Toast.LENGTH_SHORT).show();
+                    searchStr = value;
+                    getResutlFromServer(searchStr, null);
+                }
             }
         });
     }
@@ -247,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getSupportActionBar().setTitle(searchStr+" books");
+                getSupportActionBar().setTitle(titleStr+" books");
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
@@ -278,10 +357,10 @@ public class MainActivity extends AppCompatActivity {
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setSubmitButtonEnabled(true);
 
+        // Top search bar
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchStr = query;
 
                 pageNumber = 1; // Set page number to 1 for new search
                 previousButton.setImageResource(R.drawable.next);
@@ -289,7 +368,7 @@ public class MainActivity extends AppCompatActivity {
                 previousButton.setImageResource(R.drawable.pre_d);
                 previousButton.setEnabled(false);
 
-                getResutlFromServer(searchStr, null);
+                getResutlFromServer(query, null);
                 Log.i("MyActivity", "searching for : " + query);
                 return true;
             }
@@ -322,6 +401,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            // this tells the framework to start tracking for
+            // a long press and eventual key up.  it will only
+            // do so if this is the first down (not a repeat).
+
+            event.startTracking();
+            Log.i("key ---", "pressed ");
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

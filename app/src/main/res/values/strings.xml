@@ -8,5 +8,8 @@
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="title_activity_browser">Browser</string>
+    <string name="title_activity_shake">ShakeActivity</string>
+    <string name="title_activity_list_pdf">ListPdf</string>
 
 </resources>

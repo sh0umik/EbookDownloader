@@ -22,7 +22,7 @@
             tools:listitem="@layout/grid_view_content"
             android:stretchMode="columnWidth"
             android:numColumns="auto_fit"
-            android:layout_above="@+id/imageButton" />
+             />
 
 
         <ImageButton
